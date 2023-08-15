@@ -32,10 +32,14 @@ class Game:
         pygame.quit()
 
     def run(self):
+       #reset de partida
+       self.score = 0
+       self.game_speed = 20
+       
         # Game loop: events - update - draw
-        self.playing = True
-        self.obstacle_manager.reset_obstacles()
-        while self.playing:
+       self.playing = True
+       self.obstacle_manager.reset_obstacles()
+       while self.playing:
             self.events()
             self.update()
             self.draw()
@@ -96,7 +100,21 @@ class Game:
             self.screen.blit(text, text_rect)
         else:  # Tela de restart
             self.screen.blit(ICON, (half_screen_width - 20, half_screen_height - 140))
-            
+            font = pygame.font.Font(FONT_STYLE, 22)
+        
+        # score atingido
+        score_text = font.render(f"Score: {self.score}", True, TEXT_COLOR_BLACK)
+        score_rect = score_text.get_rect()
+        score_rect.center = (half_screen_width, half_screen_height + 20)
+        self.screen.blit(score_text, score_rect)
+        
+        #número de vezes que o jogador perdeu
+        death_count_text = font.render(f"Death Count: {self.death_count}", True, TEXT_COLOR_BLACK)
+        death_count_rect = death_count_text.get_rect()
+        death_count_rect.center = (half_screen_width, half_screen_height + 50)
+        self.screen.blit(death_count_text, death_count_rect)
+
+
         pygame.display.update()
         self.handle_events_on_menu()
 
