@@ -2,7 +2,7 @@ import pygame
 import random
 
 import pygame
-from dino_runner.components.moeda import Moeda
+from dino_runner.components.coin import Moeda
 from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.components.obstacles.bird import Bird
 from dino_runner.utils.constants import SCREEN_WIDTH
@@ -14,12 +14,17 @@ class ObstacleManager:
         self.when_appears = 0  
 
     def generate_coins(self, score):
-        if len(self.moedas) == 0 and self.when_appears == score:
-            self.when_appears += random.randint(100, 200)
-            num_coins = random.randint(1, 3)  
-            for _ in range(num_coins):
-                coin_y = random.randint(280, 380)  
-                self.moedas.append(Moeda(SCREEN_WIDTH, coin_y))  
+      if len(self.moedas) == 0 and self.when_appears == score:
+        self.when_appears += random.randint(100, 200)
+        num_coins = 0  # Valor padrão
+        if random.random() <= 0.5:  # 50% chance
+            num_coins = random.randint(1, 3)  # Atribuição dentro do if
+        for _ in range(num_coins):
+         coin_x = random.randint(70, SCREEN_WIDTH)  # Defina uma posição aleatória dentro da largura da tela
+         coin_y = random.randint(220, 280)
+         self.moedas.append(Moeda(SCREEN_WIDTH + random.randint(800, 1200), coin_y))
+         
+
 
     def update(self, game):
         obstacle_type = [
@@ -27,8 +32,8 @@ class ObstacleManager:
             Bird(),
         ]
 
-        self.generate_coins(game.score)  
-
+        self.generate_coins(game.score)
+ 
         if len(self.obstacles) == 0:
             self.obstacles.append(obstacle_type[random.randint(0, 1)])
         for obstacle in self.obstacles:
@@ -41,6 +46,10 @@ class ObstacleManager:
                     break
                 else:
                     self.obstacles.remove(obstacle)
+        for coin in self.moedas:
+            coin.update(game.game_speed)
+
+
 
     def draw(self, screen):
         for obstacle in self.obstacles:

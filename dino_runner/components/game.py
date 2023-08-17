@@ -10,6 +10,10 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TITLE)
+        self.image = pygame.image.load("C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\dino\\dino_runner\\assets\\moeda.png")  # Defina o caminho da imagem da moeda
+        self.rect = self.image.get_rect()
+        self.rect.x = 800
+        self.rect.y = 700
         pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -22,6 +26,8 @@ class Game:
         self.y_pos_bg = 380
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
+        self.collected_coins = []  # Inicialize a lista de moedas coletadas
+        self.coin_count = 0  # Inicialize o contador de moedas 
 
     def execute(self):
         self.running = True
@@ -56,6 +62,13 @@ class Game:
         self.obstacle_manager.update(self)
         self.update_score()
 
+   # Atualize a lista de moedas coletadas quando uma moeda for coletada
+        for coin in self.obstacle_manager.moedas:
+            if self.player.dino_rect.colliderect(coin.rect):
+                self.collected_coins.append(coin)
+                self.obstacle_manager.moedas.remove(coin)
+                self.coin_count += 1  # Adicione esta linha para atualizar o contador de moedas 
+
     def update_score(self):
         self.score += 1
         if self.score % 100 == 0:
@@ -68,8 +81,23 @@ class Game:
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.draw_score()
+        
         pygame.display.update()
         pygame.display.flip()
+       
+        font = pygame.font.Font(FONT_STYLE, 20)  # Adicione esta linha
+        coin_count_text = font.render(f"Moedas: {self.coin_count}", True, TEXT_COLOR_BLACK)
+        coin_count_rect = coin_count_text.get_rect()
+        coin_count_rect.topleft = (10, 100)  # Posição na tela
+        self.screen.blit(coin_count_text, coin_count_rect)
+        
+        
+        coin_x = 10  
+        coin_y = 40  
+        for coin in self.collected_coins:
+            self.screen.blit(coin.image, (coin_x, coin_y))
+            coin_x += coin.rect.width + 5  # Espaço entre as moedas
+
 
     def draw_background(self):
         image_width = BG.get_width()

@@ -4,6 +4,7 @@ import pygame
 from dino_runner.components.power_ups.shield import Shield
 
 
+
 class PowerUpManager:
     def __init__(self):
         self.power_ups = []
@@ -25,7 +26,7 @@ class PowerUpManager:
                 game.player.has_power_up = True
                 game.player.type = power_up.type
                 game.player.power_up_time = power_up.start_time + (power_up.duration * 1000)
-                self.power_ups.remove(power_up)
+                
 
     def draw(self, screen):
         for power_up in self.power_ups:
