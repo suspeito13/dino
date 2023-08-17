@@ -108,7 +108,7 @@ class Game:
         score_rect.center = (half_screen_width, half_screen_height + 20)
         self.screen.blit(score_text, score_rect)
         
-        #número de vezes que o jogador perdeu
+    #número de vezes que o jogador perdeu
         death_count_text = font.render(f"Death Count: {self.death_count}", True, TEXT_COLOR_BLACK)
         death_count_rect = death_count_text.get_rect()
         death_count_rect.center = (half_screen_width, half_screen_height + 50)
